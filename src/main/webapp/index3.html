@@ -112,6 +112,53 @@ var ScoreView = {
   }
 }
 
+var MyScore = {
+	    list: [],
+	    loadList: function() {
+	        return m.request({
+	            method: "GET",
+	            url: "_ah/api/myApi/v1/topscores/" // Changer l'API
+	        })
+	        .then(function(result) {
+	            MyScore.list = result.items
+	        	console.log("got:",result.items)
+	        	// m.redraw(true) 
+	        })
+	    },
+	    save: function(score,name) {
+	    	console.log("saving...",MyScore.current)
+	        return m.request({
+	            method: "GET",
+	            url: "_ah/api/myApi/v1/addScore/"+score+"/"+name // Changer l'API
+	        })
+	        .then(function(result) {
+	        	console.log("got:",result)
+	        	MyScore.loadList()
+	        })
+	    }
+	}
+
+var MyScoreView = {
+  oninit: MyScore.loadList,
+  view: function() {
+   	return m('div', [
+	  m('div',{class:'subtitle'},"My top 10 Scores"),
+	  m('table', {class:'table is-striped'},[
+	    m('tr', [
+	      m('th', {width:"20px"}, "Name"),
+	      m('th', {width:"50px"}, "Score"),
+	    ]),
+	    Score.list.map(function(item) {
+	      return m("tr", [
+  	        m('td', m('label', item.properties.name)),
+	        m('td', m('label', item.properties.score)),
+	      ])
+	    })
+	   ])
+	 ])
+  }
+}
+
 var Hello = {
    view: function() {
    	return m('div', {class:'container'}, [
@@ -119,6 +166,7 @@ var Hello = {
            m('div',{class: 'tile is-ancestor'},[
                m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(DiceView))),
                m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(ScoreView))),
+			   m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(MyScoreView))),
            ])
        ])
    }
