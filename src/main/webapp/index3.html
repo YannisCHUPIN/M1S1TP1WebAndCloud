@@ -114,10 +114,10 @@ var ScoreView = {
 
 var MyScore = {
 	    list: [],
-	    loadList: function() {
+	    MyloadList: function() {
 	        return m.request({
 	            method: "GET",
-	            url: "_ah/api/myApi/v1/topscores/" // Changer l'API
+	            url: "_ah/api/myApi/v1/myscores/"
 	        })
 	        .then(function(result) {
 	            MyScore.list = result.items
@@ -129,11 +129,11 @@ var MyScore = {
 	    	console.log("saving...",MyScore.current)
 	        return m.request({
 	            method: "GET",
-	            url: "_ah/api/myApi/v1/addScore/"+score+"/"+name // Changer l'API
+	            url: "_ah/api/myApi/v1/addScore/"+score+"/"+name
 	        })
 	        .then(function(result) {
 	        	console.log("got:",result)
-	        	MyScore.loadList()
+	        	MyScore.MyloadList()
 	        })
 	    }
 	}
