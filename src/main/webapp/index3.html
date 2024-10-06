@@ -116,6 +116,7 @@ var ScoreView = {
 var MyScore = {
     list: [],
     loadList: function(name) {
+		console.log("name:", name);
         return m.request({
             method: "GET",
             url: "_ah/api/myApi/v1/myscores/" + encodeURIComponent(name)
