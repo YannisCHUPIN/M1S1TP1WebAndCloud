@@ -88,6 +88,7 @@ var Score = {
 	        .then(function(result) {
 	        	console.log("got:",result)
 	        	Score.loadList()
+				MyScore.loadList(name);
 	        })
 	    }
 	}
@@ -119,13 +120,12 @@ var MyScore = {
 		console.log("name:", name);
         return m.request({
             method: "GET",
-            url: "_ah/api/myApi/v1/myscores/" + encodeURIComponent(name)
+            url: "_ah/api/myApi/v1/myscores/" + name
         })
         .then(function(result) {
 			console.log("MyScore API result:", result);
             MyScore.list = result.items
-            console.log("got:", result.items)
-            m.redraw()
+            m.redraw(true)
         })
     }
 }
