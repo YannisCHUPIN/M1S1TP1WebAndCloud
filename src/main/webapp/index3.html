@@ -121,6 +121,7 @@ var MyScore = {
             url: "_ah/api/myApi/v1/myscores/" + encodeURIComponent(name)
         })
         .then(function(result) {
+			console.log("MyScore API result:", result);
             MyScore.list = result.items
             console.log("got:", result.items)
             m.redraw()
