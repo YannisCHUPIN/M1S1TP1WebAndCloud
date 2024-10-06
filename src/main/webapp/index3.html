@@ -34,9 +34,10 @@ var DiceGame={
 	  }
 	  this.turn++;
 	} else {
-		Score.save(this.score,this.name);
-		this.turn=0;
-		this.score=0;
+		Score.save(this.score, this.name);
+		MyScore.loadList(this.name);
+		this.turn = 0;
+		this.score = 0;
 	}
    }
  } // DiceGame
@@ -113,50 +114,38 @@ var ScoreView = {
 }
 
 var MyScore = {
-	    list: [],
-	    MyloadList: function() {
-	        return m.request({
-	            method: "GET",
-	            url: "_ah/api/myApi/v1/myscores/"
-	        })
-	        .then(function(result) {
-	            MyScore.list = result.items
-	        	console.log("got:",result.items)
-	        	// m.redraw(true) 
-	        })
-	    },
-	    save: function(score,name) {
-	    	console.log("saving...",MyScore.current)
-	        return m.request({
-	            method: "GET",
-	            url: "_ah/api/myApi/v1/addScore/"+score+"/"+name
-	        })
-	        .then(function(result) {
-	        	console.log("got:",result)
-	        	MyScore.MyloadList()
-	        })
-	    }
-	}
+    list: [],
+    loadList: function(name) {
+        return m.request({
+            method: "GET",
+            url: "_ah/api/myApi/v1/myscores/" + encodeURIComponent(name)
+        })
+        .then(function(result) {
+            MyScore.list = result.items
+            console.log("got:", result.items)
+            m.redraw()
+        })
+    }
+}
 
 var MyScoreView = {
-  oninit: MyScore.loadList,
-  view: function() {
-   	return m('div', [
-	  m('div',{class:'subtitle'},"My top 10 Scores"),
-	  m('table', {class:'table is-striped'},[
-	    m('tr', [
-	      m('th', {width:"20px"}, "Name"),
-	      m('th', {width:"50px"}, "Score"),
-	    ]),
-	    Score.list.map(function(item) {
-	      return m("tr", [
-  	        m('td', m('label', item.properties.name)),
-	        m('td', m('label', item.properties.score)),
-	      ])
-	    })
-	   ])
-	 ])
-  }
+    view: function() {
+        return m('div', [
+            m('div', {class: 'subtitle'}, "My top 10 Scores"),
+            m('table', {class: 'table is-striped'}, [
+                m('tr', [
+                    m('th', {width: "20px"}, "Name"),
+                    m('th', {width: "50px"}, "Score"),
+                ]),
+                MyScore.list.map(function(item) {
+                    return m("tr", [
+                        m('td', m('label', item.properties.name)),
+                        m('td', m('label', item.properties.score)),
+                    ])
+                })
+            ])
+        ])
+    }
 }
 
 var Hello = {
