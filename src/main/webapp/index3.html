@@ -123,10 +123,13 @@ var MyScore = {
             url: "_ah/api/myApi/v1/myscores/" + name
         })
         .then(function(result) {
-			console.log("MyScore API result:", result);
-            MyScore.list = result.items
-            m.redraw(true)
-        })
+		console.log("MyScore API result:", result);
+		MyScore.list = result.items;
+		m.redraw(true);
+		})
+		.catch(function(e) {
+			console.error("API error:", e);
+		})
     }
 }
 
