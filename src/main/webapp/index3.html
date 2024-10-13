@@ -16,55 +16,62 @@
 </head>
 <body>
 
+<div id="g_id_onload"
+	data-client_id="307060773664-85250a05tb5bnskdma49vgsha6pbu46i.apps.googleusercontent.com"
+	data-callback="handleCredentialResponse">
+</div>
+<div class="g_id_signin" data-type="standard"></div>
+
 <script>	
 
-var DiceGame={
-  turn : 0,
-  d1 : 1,
-  d2 : 1,
-  name : 'spock',
-  score : 0,
+var DiceGame = {
+    turn: 0,
+    d1: 1,
+    d2: 1,
+    name: '', // Initialiser sans nom
+    score: 0,
 
-  play: function() {
- 	if (this.turn < 10) {
-   	  this.d1 = Math.floor((Math.random() * 5) + 1);
-	  this.d2 = Math.floor((Math.random() * 5) + 1);
-	  if (this.d1 + this.d2 == 7) {
-	    this.score += 10;
-	  }
-	  this.turn++;
-	} else {
-		Score.save(this.score, this.name);
-		MyScore.loadList(this.name);
-		this.turn = 0;
-		this.score = 0;
-	}
-   }
- } // DiceGame
+    play: function () {
+        if (this.turn < 10) {
+            this.d1 = Math.floor((Math.random() * 5) + 1);
+            this.d2 = Math.floor((Math.random() * 5) + 1);
+            if (this.d1 + this.d2 == 7) {
+                this.score += 10;
+            }
+            this.turn++;
+        } else {
+            Score.save(this.score, this.name);
+            MyScore.loadList(this.name);
+            this.turn = 0;
+            this.score = 0;
+        }
+    }
+};
 
-var DiceView={
-	view: function() {
-		return m('div', [
-			m('div',{class:'subtitle'},"Just play here"),
-			m("input[type=text][placeholder=name]", {
-				value: DiceGame.name,
-				class: 'input is-rounded',
-				 oninput: function (e) {
-					 DiceGame.name=e.target.value},
-				 }),
-			m('div',{class:'level'},[
-			 m('label',{class:'level-item'},"turn:"+DiceGame.turn),
-			 m('label',{class:'level-item'},"score:"+DiceGame.score),
-			]),
-			m('label',{class:'label'},"Dice 1:"+DiceGame.d1),
-			m('label',{class:'label'},"Dice 2:"+DiceGame.d2),
-			m('button',{
-				class: 'button is-link',
-				onclick: function(e) {DiceGame.play()}
-			    },"play"),
-		])
-	}	
+function handleCredentialResponse(response) {
+    const responsePayload = jwt_decode(response.credential);
+    DiceGame.name = responsePayload.name; // Mettre à jour le nom avec celui de l'utilisateur connecté
+    m.redraw(); // Redessiner l'interface utilisateur pour mettre à jour le nom affiché
 }
+
+var DiceView = {
+    view: function () {
+        return m('div', [
+            m('div', { class: 'subtitle' }, "Just play here"),
+            m('div', { class: 'level' }, [
+                m('label', { class: 'level-item' }, "Player: " + DiceGame.name), // Afficher le nom
+                m('label', { class: 'level-item' }, "turn:" + DiceGame.turn),
+                m('label', { class: 'level-item' }, "score:" + DiceGame.score),
+            ]),
+            m('label', { class: 'label' }, "Dice 1:" + DiceGame.d1),
+            m('label', { class: 'label' }, "Dice 2:" + DiceGame.d2),
+            m('button', {
+                class: 'button is-link',
+                onclick: function (e) { DiceGame.play() }
+            }, "play"),
+        ])
+    }
+};
  
 var Score = {
 	    list: [],

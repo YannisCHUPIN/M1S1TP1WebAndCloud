@@ -38,15 +38,15 @@ import com.google.appengine.api.datastore.Transaction;
 
 @Api(name = "myApi",
      version = "v1",
-     audiences = "927375242383-t21v9ml38tkh2pr30m4hqiflkl3jfohl.apps.googleusercontent.com",
-  	 clientIds = {"927375242383-t21v9ml38tkh2pr30m4hqiflkl3jfohl.apps.googleusercontent.com",
-        "927375242383-jm45ei76rdsfv7tmjv58tcsjjpvgkdje.apps.googleusercontent.com"},
+     audiences = "307060773664-85250a05tb5bnskdma49vgsha6pbu46i.apps.googleusercontent.com",
+     clientIds = {"307060773664-85250a05tb5bnskdma49vgsha6pbu46i.apps.googleusercontent.com"},
      namespace =
      @ApiNamespace(
-		   ownerDomain = "helloworld.example.com",
-		   ownerName = "helloworld.example.com",
-		   packagePath = "")
-     )
+         ownerDomain = "m1s1dicegameyannischupin.ey.r.appspot.com",
+         ownerName = "m1s1dicegameyannischupin.ey.r.appspot.com",
+         packagePath = "")
+)
+
 
 public class ScoreEndpoint {
 
