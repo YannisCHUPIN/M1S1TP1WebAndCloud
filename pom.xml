@@ -157,14 +157,5 @@
         </executions>
       </plugin> -->
     </plugins>
-    <plugin>
-      <groupId>com.google.cloud.tools</groupId>
-      <artifactId>appengine-maven-plugin</artifactId>
-      <version>2.4.4</version>
-      <configuration>
-          <projectId>m1s1dicegameyannischupin</projectId>
-          <version>1</version>
-      </configuration>
-    </plugin>
   </build>
 </project>
