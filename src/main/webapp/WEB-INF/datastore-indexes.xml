@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<datastore-indexes>
-    <datastore-index kind="Score" ancestor="false" source="manual">
-        <property name="name" direction="asc"/>
-        <property name="score" direction="desc"/>
-    </datastore-index>
-</datastore-indexes>
