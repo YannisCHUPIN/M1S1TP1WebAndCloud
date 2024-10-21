@@ -155,17 +155,24 @@
 	}
 	
 	var Hello = {
-	   view: function() {
-		   return m('div', {class:'container'}, [
-			   m("h1", {class: 'title'}, 'The Dice Game'),
-			   m('div',{class: 'tile is-ancestor'},[
-				   m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(DiceView))),
-				   m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(ScoreView))),
-				   m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(MyScoreView))),
-			   ])
-		   ])
-	   }
+		view: function() {
+			return m('div', {class:'container'}, [
+				m("h1", {class: 'title'}, 'The Dice Game'),
+				DiceGame.name ? [
+					// Si l'utilisateur est connecté, afficher le jeu
+					m('div',{class: 'tile is-ancestor'},[
+						m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(DiceView))),
+						m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(ScoreView))),
+						m("div", {class: 'tile'}, m('div',{class:'tile is-child box'},m(MyScoreView))),
+					])
+				] : [
+					// Si l'utilisateur n'est pas connecté, afficher un message de connexion
+					m('div', {class: 'notification'}, "Veuillez vous connecter pour jouer."),
+				]
+			])
+		}
 	}
+
 
 function handleCredentialResponse(response) {
     console.log("callback called:" + response.credential);
@@ -174,8 +181,9 @@ function handleCredentialResponse(response) {
     console.log("Full Name: " + responsePayload.name);
     DiceGame.name = responsePayload.name;  // Set the DiceGame name to the Google user's name
 
-    const url = "_ah/api/myApi/v1/Hello" + '?access_token=' + response.credential;
-    fetch(url).then(response => response.text()).then(data => document.getElementById('toto').innerHTML = data);
+    // const url = "_ah/api/myApi/v1/Hello" + '?access_token=' + response.credential;
+    // fetch(url).then(response => response.text()).then(data => document.getElementById('toto').innerHTML = data);
+	m.mount(document.body, Hello); 
 }
 
 
