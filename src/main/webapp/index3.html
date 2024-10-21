@@ -47,52 +47,52 @@
 	 } // DiceGame
 	
 	 var DiceView = {
-    view: function() {
-        return m('div', [
-            m('div', { class: 'subtitle' }, "Just play here"),
-            // Google Sign-In button
-            m('div', { id: 'g_id_onload', 'data-client_id': '307060773664-85250a05tb5bnskdma49vgsha6pbu46i.apps.googleusercontent.com', 'data-callback': 'handleCredentialResponse' }),
-            m('div', { class: 'g_id_signin', 'data-type': 'standard' }),
-            m('div', { class: 'level' }, [
-                m('label', { class: 'level-item' }, "turn:" + DiceGame.turn),
-                m('label', { class: 'level-item' }, "score:" + DiceGame.score),
-            ]),
-            m('label', { class: 'label' }, "Dice 1:" + DiceGame.d1),
-            m('label', { class: 'label' }, "Dice 2:" + DiceGame.d2),
-            m('button', {
-                class: 'button is-link',
-                onclick: function(e) { DiceGame.play() }
-            }, "play"),
-        ]);
-    }
-};
+		view: function() {
+			return m('div', [
+				m('div', { class: 'subtitle' }, "Just play here"),
+				// Google Sign-In button
+				m('div', { id: 'g_id_onload', 'data-client_id': '307060773664-85250a05tb5bnskdma49vgsha6pbu46i.apps.googleusercontent.com', 'data-callback': 'handleCredentialResponse' }),
+				m('div', { class: 'g_id_signin', 'data-type': 'standard' }),
+				m('div', { class: 'level' }, [
+					m('label', { class: 'level-item' }, "turn:" + DiceGame.turn),
+					m('label', { class: 'level-item' }, "score:" + DiceGame.score),
+				]),
+				m('label', { class: 'label' }, "Dice 1:" + DiceGame.d1),
+				m('label', { class: 'label' }, "Dice 2:" + DiceGame.d2),
+				m('button', {
+					class: 'button is-link',
+					onclick: function(e) { DiceGame.play() }
+				}, "play"),
+			]);
+		}
+	}
 	 
 	var Score = {
-			list: [],
-			loadList: function() {
-				return m.request({
-					method: "GET",
-					url: "_ah/api/myApi/v1/topscores/"
-				})
-				.then(function(result) {
-					Score.list = result.items
-					console.log("got:",result.items)
-					// m.redraw(true) 
-				})
-			},
-			save: function(score,name) {
-				console.log("saving...",Score.current)
-				return m.request({
-					method: "GET",
-					url: "_ah/api/myApi/v1/addScore/"+score+"/"+name
-				})
-				.then(function(result) {
-					console.log("got:",result)
-					Score.loadList()
-					MyScore.loadList(name);
-				})
-			}
+		list: [],
+		loadList: function() {
+			return m.request({
+				method: "GET",
+				url: "_ah/api/myApi/v1/topscores/"
+			})
+			.then(function(result) {
+				Score.list = result.items
+				console.log("got:",result.items)
+				// m.redraw(true) 
+			})
+		},
+		save: function(score,name) {
+			console.log("saving...",Score.current)
+			return m.request({
+				method: "GET",
+				url: "_ah/api/myApi/v1/addScore/"+score+"/"+name
+			})
+			.then(function(result) {
+				console.log("got:",result)
+				Score.loadList()
+				MyScore.loadList(name);
+			})
 		}
+	}
 	
 	var ScoreView = {
 	  oninit: Score.loadList,
@@ -174,20 +174,30 @@
 	}
 
 
-function handleCredentialResponse(response) {
-    console.log("callback called:" + response.credential);
-    const responsePayload = jwt_decode(response.credential);
+	function handleCredentialResponse(response) {
+		try {
+			console.log("callback called:" + response.credential);
+			const responsePayload = jwt_decode(response.credential);
+			
+			if (!responsePayload.name) {
+				throw new Error("No name received from Google");
+			}
+			
+			console.log("Full Name: " + responsePayload.name);
+			DiceGame.name = responsePayload.name;
+			m.redraw();
+			MyScore.loadList(responsePayload.name);
+		} catch (error) {
+			console.error("Authentication error:", error);
+			// Optionnel : afficher un message d'erreur à l'utilisateur
+		} finally {
+			DiceGame.loading = false;
+			m.redraw();
+    	}
+	}
 
-    console.log("Full Name: " + responsePayload.name);
-    DiceGame.name = responsePayload.name;  // Set the DiceGame name to the Google user's name
 
-    // const url = "_ah/api/myApi/v1/Hello" + '?access_token=' + response.credential;
-    // fetch(url).then(response => response.text()).then(data => document.getElementById('toto').innerHTML = data);
-	m.mount(document.body, Hello); 
-}
-
-
-m.mount(document.body, Hello)
+	m.mount(document.body, Hello)
 
 </script>
 </body>
